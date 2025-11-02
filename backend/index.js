@@ -13,7 +13,7 @@ const app=express();
 app.use(express.json())
 
 const corsOptions = {
-  origin: 'http://localhost:5000', // Only this origin is allowed
+  origin: ' http://localhost:5173', // Only this origin is allowed
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
   credentials: true // Set to true if you need to handle cookies/authentication
