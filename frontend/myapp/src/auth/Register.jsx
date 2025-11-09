@@ -1,3 +1,4 @@
+// src/components/Register.jsx
 import React, { useState } from 'react';
 import { AlertCircle, Loader, CheckCircle } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
@@ -14,16 +15,10 @@ const Register = ({ onToggleForm }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const { register } = useAuth();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-    setError('');
-  };
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,9 +42,7 @@ const Register = ({ onToggleForm }) => {
     try {
       await register(formData);
       setSuccess(true);
-      setTimeout(() => {
-        onToggleForm();
-      }, 2000);
+      setTimeout(onToggleForm, 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
@@ -58,142 +51,108 @@ const Register = ({ onToggleForm }) => {
   };
 
   return (
-    <div className="w-full max-w-md">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
-            <AlertCircle size={18} />
-            <span className="text-sm">{error}</span>
-          </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+          <AlertCircle size={18} />
+          <span className="text-sm">{error}</span>
+        </div>
+      )}
+
+      {success && (
+        <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700">
+          <CheckCircle size={18} />
+          <span className="text-sm">Registration successful! Redirecting to login...</span>
+        </div>
+      )}
+
+      <input
+        type="text"
+        name="name"
+        placeholder="Full Name"
+        value={formData.name}
+        onChange={handleChange}
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+        required
+      />
+
+      <input
+        type="email"
+        name="email"
+        placeholder="Email Address"
+        value={formData.email}
+        onChange={handleChange}
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+        required
+      />
+
+      <input
+        type="tel"
+        name="phone"
+        placeholder="Phone Number (10 digits)"
+        value={formData.phone}
+        onChange={handleChange}
+        maxLength="10"
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+        required
+      />
+
+      <input
+        type="password"
+        name="password"
+        placeholder="Password (min 6 chars)"
+        value={formData.password}
+        onChange={handleChange}
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+        required
+      />
+
+      <textarea
+        name="address"
+        placeholder="Address"
+        value={formData.address}
+        onChange={handleChange}
+        rows="2"
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+        required
+      />
+
+      <select
+        name="role"
+        value={formData.role}
+        onChange={handleChange}
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+      >
+        <option value="Student">Student</option>
+        <option value="Admin">Admin</option>
+      </select>
+
+      <button
+        type="submit"
+        disabled={loading || success}
+        className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+      >
+        {loading ? (
+          <>
+            <Loader className="animate-spin" size={20} />
+            <span>Creating Account...</span>
+          </>
+        ) : (
+          <span>Create Account</span>
         )}
+      </button>
 
-        {success && (
-          <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700">
-            <CheckCircle size={18} />
-            <span className="text-sm">Registration successful! Redirecting to login...</span>
-          </div>
-        )}
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Full Name
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="John Doe"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address
-          </label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="your.email@example.com"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="9876543210"
-            maxLength="10"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Minimum 6 characters"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Address
-          </label>
-          <textarea
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            placeholder="Your complete address"
-            rows="2"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Register as
-          </label>
-          <select
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-          >
-            <option value="Student">Student</option>
-            <option value="Admin">Admin</option>
-          </select>
-        </div>
-
+      <p className="text-sm text-center text-gray-600 mt-4">
+        Already have an account?{' '}
         <button
-          type="submit"
-          disabled={loading || success}
-          className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          type="button"
+          onClick={onToggleForm}
+          className="text-blue-600 hover:text-blue-700 font-medium"
         >
-          {loading ? (
-            <>
-              <Loader className="animate-spin" size={20} />
-              <span>Creating Account...</span>
-            </>
-          ) : (
-            <span>Create Account</span>
-          )}
+          Login here
         </button>
-
-        <div className="text-center mt-4">
-          <p className="text-sm text-gray-600">
-            Already have an account?{' '}
-            <button
-              type="button"
-              onClick={onToggleForm}
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              Login here
-            </button>
-          </p>
-        </div>
-      </form>
-    </div>
+      </p>
+    </form>
   );
 };
 

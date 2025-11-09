@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Package, ShoppingCart, History, ShoppingBag } from 'lucide-react';
+import { Home, Package, ShoppingCart, History, ShoppingBag, FileText, Truck } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose, activeView, setActiveView, userRole }) => {
   const adminMenuItems = [
@@ -9,7 +9,9 @@ const Sidebar = ({ isOpen, onClose, activeView, setActiveView, userRole }) => {
   ];
 
   const studentMenuItems = [
-    { id: 'shop', label: 'Shop', icon: ShoppingBag },
+    { id: 'shop', label: 'Shop Products', icon: ShoppingBag },
+    { id: 'custom-order', label: 'Custom Order', icon: FileText },
+    { id: 'parcel-pickup', label: 'Parcel Pickup', icon: Truck },
     { id: 'orders', label: 'My Orders', icon: History },
     { id: 'cart', label: 'Cart', icon: ShoppingCart },
   ];

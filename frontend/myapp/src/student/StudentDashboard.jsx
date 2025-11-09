@@ -4,6 +4,8 @@ import Sidebar from '../components/common/Sidebar';
 import StudentProductsView from './StudentProductView';
 import StudentOrdersView from './StudentOrderView';
 import StudentCartView from './StudentCardview';
+import CustomOrderView from './CustomOrderView';
+import ParcelPickupView from './ParcelPickipView';
 
 const StudentDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -29,6 +31,8 @@ const StudentDashboard = () => {
           {activeView === 'shop' && <StudentProductsView />}
           {activeView === 'orders' && <StudentOrdersView />}
           {activeView === 'cart' && <StudentCartView />}
+          {activeView === 'custom-order' && <CustomOrderView />}
+          {activeView === 'parcel-pickup' && <ParcelPickupView />}
         </main>
       </div>
     </div>

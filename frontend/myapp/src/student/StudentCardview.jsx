@@ -3,19 +3,26 @@ import { ShoppingCart, Trash2 } from 'lucide-react';
 import { useCart } from '../hooks/useCard';
 import { useOrders } from '../hooks/useOrders';
 import { useNavigate } from 'react-router-dom';
+import PaymentModal from './PaymentModel';
 
 const StudentCartView = () => {
   const { cart, updateQuantity, removeFromCart, clearCart, getTotal } = useCart();
   const { placeOrder } = useOrders();
   const navigate = useNavigate();
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handlePlaceOrder = async () => {
+  const total = getTotal();
+
+  const handleCheckout = () => {
     if (cart.length === 0) {
       alert('Your cart is empty!');
       return;
     }
+    setShowPaymentModal(true);
+  };
 
+  const handlePaymentComplete = async (paymentMethod, paymentId) => {
     setLoading(true);
     try {
       const products = cart.map((item) => ({
@@ -25,6 +32,7 @@ const StudentCartView = () => {
 
       await placeOrder(products);
       clearCart();
+      setShowPaymentModal(false);
       alert('Order placed successfully!');
       navigate('/dashboard');
       window.location.reload();
@@ -34,8 +42,6 @@ const StudentCartView = () => {
       setLoading(false);
     }
   };
-
-  const total = getTotal();
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -125,16 +131,24 @@ const StudentCartView = () => {
                 </div>
               </div>
               <button
-                onClick={handlePlaceOrder}
+                onClick={handleCheckout}
                 disabled={loading}
                 className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50"
               >
-                {loading ? 'Placing Order...' : 'Place Order'}
+                {loading ? 'Processing...' : 'Proceed to Checkout'}
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        orderTotal={total}
+        onPaymentComplete={handlePaymentComplete}
+      />
     </div>
   );
 };
